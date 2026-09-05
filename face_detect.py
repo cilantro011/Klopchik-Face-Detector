@@ -45,13 +45,9 @@ def recognize_face(unknown_embedding, known_faces, threshold=0.6):
     else:
         print("No match found")
 
+test_image = cv2.imread("test_sajan.JPG")
+test_faces = app.get(test_image)
 
-coordinates = []
-for face in faces:
-    coordinate = face.bbox
-    int_coordinate = [int(x) for x in coordinate]
-    coordinates.append(int_coordinate)
+test_embedding = test_faces[0].embedding
 
-for coord in coordinates:
-    x1, y1, x2, y2 = coord
-    cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+recognize_face(test_embedding, known_faces, 0.6)
