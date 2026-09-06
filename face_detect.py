@@ -41,13 +41,44 @@ def recognize_face(unknown_embedding, known_faces, threshold=0.6):
             best_match = name
 
     if best_similarity >= threshold:
-        print(f"Best match: {best_match}")
+        return best_match
     else:
-        print("No match found")
+        return "Unknown"
 
-test_image = cv2.imread("test_sajan.JPG")
-test_faces = app.get(test_image)
+cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+        print("Error: Could not open Camera")
+        sys.exit(1)
+while True:
+    
+    ret, frame = cap.read()
 
-test_embedding = test_faces[0].embedding
+    if not ret:
+        print("Error: Couldnot grab a frame")
+        continue
 
-recognize_face(test_embedding, known_faces, 0.6)
+    
+    test_faces = app.get(frame)
+
+    if test_faces:
+        
+        for face in test_faces:
+            name = recognize_face(face.embedding, known_faces, 0.6)
+            x1, y1, x2, y2 = map(int,face.bbox)
+            color = (0, 255, 0)
+            thickness = 2
+            cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
+            cv2.putText(
+            frame,
+            name,
+            (x1, y1 - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (0, 0, 255),
+            2)
+
+    cv2.imshow("Live Video", frame)
+    if cv2.waitKey(1) == ord('q'):
+        break
+cap.release()
+cv2.destroyAllWindows
