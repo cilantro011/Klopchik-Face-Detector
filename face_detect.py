@@ -4,23 +4,10 @@ import cv2
 import sys
 import numpy as np
 
+from known_faces_dictionary import known_faces
+
 app = FaceAnalysis(name='buffalo_l')
 app.prepare(ctx_id=0)
-
-image = cv2.imread("shishir.jpg")
-faces = app.get(image)
-
-image2 = cv2.imread("sajan.jpg")
-faces2 = app.get(image2)
-
-image3 = cv2.imread("river.jpg")
-faces3 = app.get(image3)
-
-shishir = faces[0].embedding
-sajan = faces2[0].embedding
-river = faces3[0].embedding
-
-known_faces = {"shishir": shishir, "sajan": sajan, "river": river}
 
 def calculate_similarity(emb1, emb2):
     dot_product = np.dot(emb1, emb2)
@@ -47,8 +34,8 @@ def recognize_face(unknown_embedding, known_faces, threshold=0.6):
 
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
-        print("Error: Could not open Camera")
-        sys.exit(1)
+    print("Error: Could not open Camera")
+    sys.exit(1)
 while True:
     
     ret, frame = cap.read()
