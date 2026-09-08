@@ -2,23 +2,21 @@ import insightface
 from insightface.app import FaceAnalysis
 import cv2
 import numpy as np
+from pathlib import Path
 
 app = FaceAnalysis(name='buffalo_l')
 app.prepare(ctx_id=0)
 
-image = cv2.imread("shishir.jpg")
-faces = app.get(image)
+folder = Path("known_faces")
+image_folder = folder/"images"
+embeddings_folder = folder/"embeddings"
+embeddings_folder.mkdir(exist_ok=True)
 
-image2 = cv2.imread("sajan.jpg")
-faces2 = app.get(image2)
-
-image3 = cv2.imread("river.jpg")
-faces3 = app.get(image3)
-
-shishir = faces[0].embedding
-sajan = faces2[0].embedding
-river = faces3[0].embedding
-
-np.save("shishir.npy", shishir)
-np.save("sajan.npy", sajan)
-np.save("river.npy", river)
+for image_path in image_folder.iterdir():
+    if image_path.suffix.lower() ==".jpg":
+        image = cv2.imread(str(image_path))
+        faces = app.get(image)
+        if len(faces) == 1:
+            np.save(embeddings_folder/f"{image_path.stem}.npy", faces[0].embedding)
+        else:
+            print(f"Skipped image {image_path}. It had {len(faces)} faces.")
