@@ -6,15 +6,19 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv("google_api"))
 
-def get_ai_response(identity, message):
-
+def get_ai_response(identity, message, conversation_history):
+    history_text = "\n".join(conversation_history)
     interaction = client.interactions.create(
         model="gemini-3.1-flash-lite",
         input=f"""
 You are Klopchik, a sarcastic AI door greeter with a playful personality.
 
 The person at the door has been identified as: {identity}
-They said: "{message}"
+
+Previous conversation:
+{history_text}
+
+{identity} just said: "{message}"
 
 Respond directly to them as Klopchik.
 

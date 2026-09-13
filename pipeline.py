@@ -6,14 +6,24 @@ from brain import get_ai_response
 name = recognize_name()
 print(name)
 
-transcription = str(listen_and_transcribe())
-print(transcription)
+conversation_history = []
 
-response = get_ai_response(name, transcription)
-print(response)
+while True:
+    transcription = listen_and_transcribe()
+    print(transcription)
+   
 
-text_to_speech(response)
+    if "goodbye"in transcription.lower():
+        break
+    
+    response = get_ai_response(name, transcription, conversation_history)
+    print(response)
+    conversation_history.append(f"{name}: {transcription}")
+    conversation_history.append(f"AI: {response}")
 
+    text_to_speech(response)
+
+    
 
 
 
