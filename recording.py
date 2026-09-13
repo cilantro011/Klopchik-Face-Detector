@@ -20,4 +20,4 @@ def listen_and_transcribe():
 
     return result.stdout.strip()
 
-print(listen_and_transcribe())
+transcription = str(listen_and_transcribe())

@@ -32,6 +32,3 @@ Rules:
     }
     )
     return interaction.output_text
-
-
-print(get_ai_response("Sajan", "do that dumbass"))
