@@ -19,5 +19,3 @@ def listen_and_transcribe():
                             text = True)
 
     return result.stdout.strip()
-
-transcription = str(listen_and_transcribe())

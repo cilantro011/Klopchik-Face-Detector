@@ -32,40 +32,62 @@ def recognize_face(unknown_embedding, known_faces, threshold=0.6):
     else:
         return "Unknown"
 
-cap = cv2.VideoCapture(0)
-if not cap.isOpened():
-    print("Error: Could not open Camera")
-    sys.exit(1)
-while True:
-    
-    ret, frame = cap.read()
-
-    if not ret:
-        print("Error: Couldnot grab a frame")
-        continue
-
-    
-    test_faces = app.get(frame)
-
-    if test_faces:
+def recognize_name():
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Could not open Camera")
+        sys.exit(1)
+    while True:
         
-        for face in test_faces:
-            name = recognize_face(face.embedding, known_faces, 0.6)
-            x1, y1, x2, y2 = map(int,face.bbox)
-            color = (0, 255, 0)
-            thickness = 2
-            cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
-            cv2.putText(
-            frame,
-            name,
-            (x1, y1 - 10),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            (0, 0, 255),
-            2)
+        ret, frame = cap.read()
 
-    cv2.imshow("Live Video", frame)
-    if cv2.waitKey(1) == ord('q'):
-        break
-cap.release()
-cv2.destroyAllWindows
+        if not ret:
+            print("Error: Couldnot grab a frame")
+            continue
+
+        
+        test_faces = app.get(frame)
+
+        if test_faces:
+            name = recognize_face(test_faces[0].embedding, known_faces, 0.6)
+
+        return name
+
+def draw_rectangle():
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Could not open Camera")
+        sys.exit(1)
+    while True:
+        
+        ret, frame = cap.read()
+
+        if not ret:
+            print("Error: Couldnot grab a frame")
+            continue
+
+        
+        test_faces = app.get(frame)
+
+        if test_faces:
+            
+            for face in test_faces:
+                name = recognize_face(face.embedding, known_faces, 0.6)
+                x1, y1, x2, y2 = map(int,face.bbox)
+                color = (0, 255, 0)
+                thickness = 2
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
+                cv2.putText(
+                frame,
+                name,
+                (x1, y1 - 10),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (0, 0, 255),
+                2)
+
+        cv2.imshow("Live Video", frame)
+        if cv2.waitKey(1) == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows
