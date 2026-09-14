@@ -1,5 +1,3 @@
-from tkinter.font import names
-
 import insightface
 from insightface.app import FaceAnalysis
 import cv2
@@ -35,7 +33,7 @@ def recognize_face(unknown_embedding, known_faces, threshold=0.6):
         return "Unknown"
 
 def recognize_names():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     if not cap.isOpened():
         print("Error: Could not open Camera")
         sys.exit(1)
@@ -49,15 +47,19 @@ def recognize_names():
 
         
         test_faces = app.get(frame)
+        if not test_faces:
+            continue
         names = []
-        if test_faces:
-            for face in test_faces:
-                names.append(recognize_face(face.embedding, known_faces, 0.6))
+        
+        for face in test_faces:
+            names.append(recognize_face(face.embedding, known_faces, 0.6))
+
+        cap.release()
 
         return names
 
 def draw_rectangle():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     if not cap.isOpened():
         print("Error: Could not open Camera")
         sys.exit(1)
@@ -93,4 +95,27 @@ def draw_rectangle():
         if cv2.waitKey(1) == ord('q'):
             break
     cap.release()
-    cv2.destroyAllWindows
+    cv2.destroyAllWindows()
+
+def person_still_at_door():
+    cap = cv2.VideoCapture(1)
+
+    if not cap.isOpened():
+        return False
+
+    for frame in range(5):
+
+        ret, frame = cap.read()
+
+        if not ret:
+            continue
+
+        face = app.get(frame)
+
+        if face:
+            cap.release()
+            return True
+
+    cap.release()
+    return False
+        
