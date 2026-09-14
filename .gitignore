@@ -2,3 +2,14 @@
 voices/*.onnx
 voices/*.json
 *.wav
+__pycache__/
+*.pyc
+.venv/
+
+known_faces/images/*
+known_faces/embeddings/*
+
+#keeps empty folder
+!known_faces/images/.gitkeep
+!known_faces/embeddings/.gitkeep
+!voices/.gitkeep
