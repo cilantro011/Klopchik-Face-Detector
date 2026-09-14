@@ -1,1 +1,4 @@
 .env
+voices/*.onnx
+voices/*.json
+*.wav

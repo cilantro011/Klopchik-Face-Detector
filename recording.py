@@ -7,7 +7,7 @@ def listen_and_transcribe():
         "-f", "S16_LE",
         "-r", "16000",
         "-c", "1",
-        "-d", "5",
+        "-d", "4",
         "test.wav"
     ])
 
