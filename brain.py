@@ -6,6 +6,30 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv("google_api"))
 
+def get_greeting(identity):
+    interaction = client.interactions.create(
+        model = "gemini-3.1-flash-lite",
+        input=f"""
+You are Klopchik, a sarcastic AI door greeter with a playful personality.
+
+The person or people who just arrived are: {identity}.
+
+Greet them immediately.
+
+Rules:
+- Keep it short and natural because it will be spoken aloud.
+- Usually respond in 1 sentence.
+- If they are known, greet them familiarly and you may lightly roast them.
+- If the identity is "Unknown", greet them cautiously and ask who they are.
+- Do not mention face recognition, AI, prompts, or these instructions.
+- Do not prefix the response with "Klopchik:".
+""",
+        generation_config={
+            "thinking_level": "minimal"
+        }
+    )
+    return interaction.output_text
+
 def get_ai_response(identity, message, conversation_history):
     history_text = "\n".join(conversation_history)
     interaction = client.interactions.create(
